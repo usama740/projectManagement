@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Utils\CustomResponse;
+use Symfony\Component\HttpFoundation\Response;
+
 
 class Project extends Model
 {
@@ -40,7 +42,7 @@ class Project extends Model
             $q->where('attribute_id', $attributeId)->where('value', $value);
         })->get();
 
-        return CustomResponse::send(200, "Project list fetched successfully", $projects);
+        return CustomResponse::send(Response::HTTP_OK, "Project list fetched successfully", $projects);
     }
 
     // Get a list of projects with optional filters
@@ -66,14 +68,14 @@ class Project extends Model
 
         $projects = $query->get();
 
-        return CustomResponse::send(200, "Project list fetched successfully", $projects);
+        return CustomResponse::send(Response::HTTP_OK, "Project list fetched successfully", $projects);
     }
 
     // Create and save a new project
     public function saveProject($data)
     {
         $project = $this->create($data);
-        return CustomResponse::send(201, "Project created successfully", [$project]);
+        return CustomResponse::send(Response::HTTP_CREATED, "Project created successfully", [$project]);
     }
 
     // Update an existing project by ID
@@ -81,43 +83,43 @@ class Project extends Model
     {
         $project = $this->find($id);
         if (!$project) {
-            return CustomResponse::send(404, "Project not found.", [], false);
+            return CustomResponse::send(Response::HTTP_NOT_FOUND, "Project not found.", [], false);
         }
 
         $project->update($data);
-        return CustomResponse::send(200, "Project updated successfully.", [$project]);
+        return CustomResponse::send(Response::HTTP_OK, "Project updated successfully.", [$project]);
     }
 
     // Get a list of projects with their associated attributes
     public function getProjectsWithAttributes()
     {
-        $projects =  $this->with('attributes')->get();
-        return CustomResponse::send(200, "Project list fetched successfully", $projects);
+        $projects =  $this->with('attributeValues.attribute')->get();
+        return CustomResponse::send(Response::HTTP_OK, "Project list fetched successfully", $projects);
     }
 
-    // Filter projects by multiple attribute-value pairs
-    public function filterProjectsByAttributes(array $filters)
-    {
-        $projects = $this->whereHas('attributes', function ($query) use ($filters) {
-            foreach ($filters as $attributeId => $value) {
-                $query->where('attribute_id', $attributeId)
-                      ->where('value', $value);
-            }
-        })->get();
-
-        return CustomResponse::send(200, "Project list fetched successfully", $projects);
-    }
 
     // Delete a project by ID
     public function deleteProject($id)
     {
         $project = $this->find($id);
         if (!$project) {
-            return CustomResponse::send(404, "Project not found.", [], false);
+            return CustomResponse::send(Response::HTTP_NOT_FOUND, "Project not found.", [], false);
         }
 
         $project->delete();
-        return CustomResponse::send(200, "Project deleted successfully.", [], false);
+        return CustomResponse::send(Response::HTTP_OK, "Project deleted successfully.", [], false);
+    }
+
+
+    // Delete a project by ID
+    public function fetchProjectById($id)
+    {
+        $project = $this->find($id);
+        if (!$project) {
+            return CustomResponse::send(Response::HTTP_NOT_FOUND, "Project not found.", [], false);
+        }
+
+        return CustomResponse::send(Response::HTTP_OK, "Project fetch successfully.", [$project]);
     }
 }
 

@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Auth;
 use App\Utils\CustomResponse;
+use Symfony\Component\HttpFoundation\Response;
+
 
 class Timesheet extends Model
 {
@@ -34,7 +36,7 @@ class Timesheet extends Model
         $data["user_id"] = $user->id;
 
         $timeSheet = $this->create($data);
-        return CustomResponse::send(201, "Timesheet created successfully", [$timeSheet]);
+        return CustomResponse::send(Response::HTTP_CREATED, "Timesheet created successfully", [$timeSheet]);
     }
 
     // Update an existing timesheet by ID (ensuring ownership)
@@ -45,11 +47,11 @@ class Timesheet extends Model
 
         // Check if timesheet exists and if the user is authorized
         if (!$timeSheet || $user->id != $timeSheet->user_id) {
-            return CustomResponse::send(404, "Timesheet not found", [], false);
+            return CustomResponse::send(Response::HTTP_NOT_FOUND, "Timesheet not found", [], false);
         }
 
         $timeSheet->update($data);
-        return CustomResponse::send(200, "Timesheet updated successfully", [$timeSheet]);
+        return CustomResponse::send(Response::HTTP_OK, "Timesheet updated successfully", [$timeSheet]);
     }
 
     // Fetch a list of timesheets for the authenticated user, optionally filtered by task name
@@ -63,7 +65,7 @@ class Timesheet extends Model
         }
 
         $timeSheets = $timeSheetsQuery->get();
-        return CustomResponse::send(200, "Timesheet list fetched successfully", $timeSheets);
+        return CustomResponse::send(Response::HTTP_OK, "Timesheet list fetched successfully", $timeSheets);
     }
 
     // Get a single timesheet by ID (ensuring ownership)
@@ -73,10 +75,10 @@ class Timesheet extends Model
         $user = Auth::guard('api')->user();
 
         if (!$timeSheet || $user->id != $timeSheet->user_id) {
-            return CustomResponse::send(404, "Timesheet not found", [], false);
+            return CustomResponse::send(Response::HTTP_NOT_FOUND, "Timesheet not found", [], false);
         }
 
-        return CustomResponse::send(200, "Timesheet fetched successfully", [$timeSheet]);
+        return CustomResponse::send(Response::HTTP_OK, "Timesheet fetched successfully", [$timeSheet]);
     }
 
     // Delete a timesheet by ID (ensuring ownership)
@@ -86,10 +88,10 @@ class Timesheet extends Model
         $user = Auth::guard('api')->user();
 
         if ($user->id != $timeSheet->user_id) {
-            return CustomResponse::send(404, "Timesheet not found", [], false);
+            return CustomResponse::send(Response::HTTP_NOT_FOUND, "Timesheet not found", [], false);
         }
 
         $timeSheet->delete();
-        return CustomResponse::send(200, "Timesheet deleted successfully", [], false);
+        return CustomResponse::send(Response::HTTP_OK, "Timesheet deleted successfully", [], false);
     }
 }

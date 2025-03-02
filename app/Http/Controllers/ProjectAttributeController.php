@@ -37,20 +37,6 @@ class ProjectAttributeController extends Controller
         return response()->json($response_data, $response_data["status"]);
     }
 
-    // Filter projects based on attribute and value
-    public function filterProjects(Request $request)
-    {
-        $attributeId = $request->input('attribute_id');
-        $value = $request->input('value');
-
-        if (!$attributeId || !$value) {
-            return response()->json(['error' => 'Invalid request parameters'], 400);
-        }
-
-        $response_data = $this->project->filterProjects($attributeId, $value);
-        return response()->json($response_data, $response_data["status"]);
-    }
-
     // Delete an attribute
     public function deleteAttribute(int $id)
     {

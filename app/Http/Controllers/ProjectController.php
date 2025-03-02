@@ -75,18 +75,18 @@ class ProjectController extends Controller
         return response()->json($response_data, $response_data["status"]);
     }
 
-    // Method to filter projects based on attribute filters
-    public function filterProjectsByAttributes(FilterProjectRequest $request)
-    {
-        $filters = $request->input('filters', []);
-        $response_data = $this->project->filterProjectsByAttributes($filters);
-        return response()->json($response_data, $response_data["status"]);
-    }
-
     // Method to delete a project by ID
     public function deleteProject(int $id)
     {
         $response_data = $this->project->deleteProject($id);
         return response()->json($response_data, $response_data["status"]);
     }
+
+
+     // Method to delete a project by ID
+     public function fetchProjectById(int $id)
+     {
+         $response_data = $this->project->fetchProjectById($id);
+         return response()->json($response_data, $response_data["status"]);
+     }
 }

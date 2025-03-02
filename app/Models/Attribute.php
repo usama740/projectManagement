@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Utils\CustomResponse;
+use Symfony\Component\HttpFoundation\Response;
+
 
 
 class Attribute extends Model
@@ -22,7 +24,7 @@ class Attribute extends Model
     public function saveAttribute($data)
     {
         $attribute = $this->create($data);
-        return CustomResponse::send(201, "Attribute created successfully", [$attribute]);
+        return CustomResponse::send(Response::HTTP_CREATED, "Attribute created successfully", [$attribute]);
     }
 
     // Update an existing attribute by ID
@@ -30,11 +32,11 @@ class Attribute extends Model
     {
         $attribute = $this->find($id);
         if (!$attribute) {
-            return CustomResponse::send(404, "Attribute not found.", [], false);
+            return CustomResponse::send(Response::HTTP_NOT_FOUND, "Attribute not found.", [], false);
         }
 
         $attribute->update($data);
-        return CustomResponse::send(200, "Attribute updated successfully.", [$attribute]);
+        return CustomResponse::send(Response::HTTP_OK, "Attribute updated successfully.", [$attribute]);
     }
 
     // Delete an attribute by ID (Note: missing actual delete logic)
@@ -42,11 +44,11 @@ class Attribute extends Model
     {
         $attribute = $this->find($id);
         if (!$attribute) {
-            return CustomResponse::send(404, "Attribute not found.", [], false);
+            return CustomResponse::send(Response::HTTP_NOT_FOUND, "Attribute not found.", [], false);
         }
 
         $attribute->delete();
-        return CustomResponse::send(200, "Attribute deleted successfully.", [], false);
+        return CustomResponse::send(Response::HTTP_OK, "Attribute deleted successfully.", [], false);
     }
 
     // Fetch a list of attributes with optional filters
@@ -62,7 +64,7 @@ class Attribute extends Model
             }
         }
 
-        return CustomResponse::send(200, "Attribute list fetched successfully", $query->get());
+        return CustomResponse::send(Response::HTTP_OK, "Attribute list fetched successfully", $query->get());
     }
 
     // Fetch a single attribute by ID
@@ -70,10 +72,10 @@ class Attribute extends Model
     {
         $attribute = $this->find($id);
         if (!$attribute) {
-            return CustomResponse::send(404, "Attribute not found", [], false);
+            return CustomResponse::send(Response::HTTP_NOT_FOUND, "Attribute not found", [], false);
         }
 
-        return CustomResponse::send(200, "Attribute fetched successfully", [$attribute]);
+        return CustomResponse::send(Response::HTTP_OK, "Attribute fetched successfully", [$attribute]);
     }
 }
 

@@ -11,9 +11,7 @@ use Laravel\Passport\HasApiTokens;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use App\Utils\CustomResponse;
-
-
-
+use Symfony\Component\HttpFoundation\Response;
 
 
 class User extends Authenticatable
@@ -53,7 +51,7 @@ class User extends Authenticatable
         // Encrypt the password before saving
         $data["password"] = Hash::make($data["password"]);
         $user = $this->create($data);
-        return CustomResponse::send(201, "User registered successfully", $user);
+        return CustomResponse::send(Response::HTTP_CREATED, "User registered successfully", [$user]);
     }
 
     // Fetch users with optional filters (first_name, last_name, email)
@@ -71,7 +69,7 @@ class User extends Authenticatable
         }
 
         $users = $query->get();
-        return CustomResponse::send(200, "User list fetched successfully", $users);
+        return CustomResponse::send(Response::HTTP_OK, "User list fetched successfully", $users);
     }
 
     // Fetch a user by their ID
@@ -81,10 +79,10 @@ class User extends Authenticatable
 
         // Check if user exists
         if (!$user) {
-            return CustomResponse::send(404, "User not found", [], false);
+            return CustomResponse::send(Response::HTTP_NOT_FOUND, "User not found", [], false);
         }
 
-        return CustomResponse::send(200, "User fetched successfully", [$user]);
+        return CustomResponse::send(Response::HTTP_OK, "User fetched successfully", [$user]);
     }
 
     // Update user details for the authenticated user
@@ -96,7 +94,7 @@ class User extends Authenticatable
         $data['email'] = $user->email;
         $user->update($data);
 
-        return CustomResponse::send(200, "User updated successfully", [$user]);
+        return CustomResponse::send(Response::HTTP_OK, "User updated successfully", [$user]);
     }
 }
 

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Utils\CustomResponse;
 use App\Http\Requests\LoginRequest;
+use Symfony\Component\HttpFoundation\Response;
 
 
 class LoginController extends Controller
@@ -15,7 +16,7 @@ class LoginController extends Controller
     {
         if (!Auth::attempt($request->only('email', 'password'))) {
             return response()->json(
-                CustomResponse::send(401, "Unauthorized", [], false),
+                CustomResponse::send(Response::HTTP_UNAUTHORIZED, "Unauthorized", [], false),
                 401
             );
         }
@@ -24,7 +25,7 @@ class LoginController extends Controller
         $token = $user->createToken('API Token', [], $user->getAccessTokenPayload())->accessToken;
 
         return response()->json(
-            CustomResponse::send(200, "Successfully logged in", ['token' => $token])
+            CustomResponse::send(Response::HTTP_OK, "Successfully logged in", ['token' => $token])
         );
     }
 
@@ -35,15 +36,15 @@ class LoginController extends Controller
 
         if (!$user) {
             return response()->json(
-                CustomResponse::send(401, "Unauthorized", [], false),
-                401
+                CustomResponse::send(Response::HTTP_UNAUTHORIZED, "Unauthorized", [], false),
+                Response::HTTP_UNAUTHORIZED
             );
         }
 
         $user->token()->revoke();
 
         return response()->json(
-            CustomResponse::send(200, "Successfully logged out", [], false)
+            CustomResponse::send(Response::HTTP_OK, "Successfully logged out", [], false)
         );
     }
 }

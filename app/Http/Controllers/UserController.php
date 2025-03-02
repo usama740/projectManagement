@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Http\Requests\UserRequest;
+use App\Http\Requests\UserUpdateRequest;
 use Illuminate\Http\Request;
 
 
@@ -30,10 +31,10 @@ class UserController extends Controller
     }
 
     // Method to update an existing user
-    public function updateUser(UserRequest $request)
+    public function updateUser(UserUpdateRequest $request)
     {
         // Use the updateUser method from the User model to update user details
-        $response_data = $this->user->updateUser($request->all());
+        $response_data = $this->user->updateUser($request->only(["first_name", "last_name"]));
 
         // Return the response data as JSON with the corresponding status code
         return response()->json($response_data, $response_data["status"]);
