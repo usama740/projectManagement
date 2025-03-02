@@ -12,7 +12,7 @@ The system also includes a secure authentication and authorization mechanism, en
 1.  **Clone the repository:**
 
     ```bash
-    git clone https://github.com/usama740/projectManagement.git
+    git clone [https://github.com/usama740/projectManagement.git](https://github.com/usama740/projectManagement.git)
     cd project_management
     ```
 
@@ -67,8 +67,21 @@ The system also includes a secure authentication and authorization mechanism, en
     ```
 
 2.  **Open your browser and navigate to `http://localhost:8000`.**
-  
+
 ## Testing credentials
 
-*  Email: admin@example.com
-*  Password: password123
+* Email: admin@example.com
+* Password: password123
+
+## Postman Collection
+
+For API Documentation, you can import the following Postman collection:
+`project_management.postman_collection.json`
+
+1.  **Download the Postman collection JSON file:** 
+2.  **Open Postman.**
+3.  **Click the "Import" button.**
+4.  **Select "File" and choose the downloaded JSON file.**
+5.  **Import the collection.**
+
+**Note:** Ensure you have configured the appropriate environment variables within Postman to match your local `.env` file, especially the base URL.
